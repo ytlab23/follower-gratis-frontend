@@ -53,5 +53,10 @@ const updateUserSchema = z.object({
     .optional(),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Indirizzo email non valido"),
+});
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;

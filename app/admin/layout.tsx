@@ -19,6 +19,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useEffect } from "react";
 
 export default function DashboardLayout({
   children,
@@ -29,6 +30,12 @@ export default function DashboardLayout({
   const router = useRouter();
   const { user, isLoading } = useAuth();
 
+  useEffect(() => {
+    if (!isLoading && user?.role !== "admin") {
+      router.push("/login");
+    }
+  }, [user, isLoading, router]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -38,7 +45,11 @@ export default function DashboardLayout({
   }
 
   if (user?.role !== "admin") {
-    router.push("/login");
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   const pathSegments = pathname.split("/").filter(Boolean);

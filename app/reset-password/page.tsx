@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { CardFooter } from "@/components/ui/card";
 import { toast } from "react-toastify";
@@ -23,7 +23,6 @@ import { toast } from "react-toastify";
 // Update the CardContent to include CardFooter
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
 
   const {
@@ -74,24 +73,12 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Inserisci la tua password"
-                  className="pr-10"
-                  {...register("password")}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
-                  aria-label={showPassword ? "Nascondi password" : "Mostra password"}
-                  title={showPassword ? "Nascondi password" : "Mostra password"}
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Inserisci la tua password"
+                {...register("password")}
+              />
               {errors.password && (
                 <p className="text-sm text-red-600">
                   {errors.password.message}
@@ -104,16 +91,11 @@ export default function LoginPage() {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col items-center space-y-2">
+        <CardFooter className="flex justify-center">
           <p className="text-sm text-muted-foreground">
             Non hai un account?{" "}
             <Link href="/register" className="text-blue-600 hover:underline">
               Registrati
-            </Link>
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <Link href="/forgot-password" className="text-blue-600 hover:underline">
-              Password dimenticata?
             </Link>
           </p>
         </CardFooter>
