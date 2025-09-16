@@ -4,7 +4,10 @@ import { useState, useEffect, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams, useRouter } from "next/navigation";
-import { resetPasswordSchema, type ResetPasswordFormData } from "@/schemas/auth";
+import {
+  resetPasswordSchema,
+  type ResetPasswordFormData,
+} from "@/schemas/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +23,6 @@ import Link from "next/link";
 import { CardFooter } from "@/components/ui/card";
 import { toast } from "react-toastify";
 import api from "@/lib/axios";
-import Head from "next/head";
 
 function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -55,13 +57,15 @@ function ResetPasswordForm() {
         token,
         newPassword: data.newPassword,
       });
-      
+
       if (response.data.status === "success") {
         toast.success("Password reimpostata con successo!");
         router.push("/login");
       }
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || "Si è verificato un errore durante il reset della password";
+      const errorMessage =
+        error.response?.data?.message ||
+        "Si è verificato un errore durante il reset della password";
       toast.error(errorMessage);
       console.log(error);
     } finally {
@@ -70,24 +74,16 @@ function ResetPasswordForm() {
   };
 
   return (
-    <>
-      <Head>
-        <title>Reimposta la tua password - FollowerGratis.it</title>
-        <meta 
-          name="description" 
-          content="Hai dimenticato la password? Reimposta facilmente l'accesso al tuo account FollowerGratis.it in pochi secondi." 
-        />
-      </Head>
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-              <span className="text-2xl font-bold text-slate-800 mr-2">
-                <span className="text-[#2150C2]">Follower</span>
-                <span className="text-[#CD41B4]">Gratis</span>
-              </span>
-            </div>
-            <CardTitle className="text-2xl">Reimposta Password</CardTitle>
+    <div className="min-h-screen flex items-center justify-center">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <span className="text-2xl font-bold text-slate-800 mr-2">
+              <span className="text-[#2150C2]">Follower</span>
+              <span className="text-[#CD41B4]">Gratis</span>
+            </span>
+          </div>
+          <CardTitle className="text-2xl">Reimposta Password</CardTitle>
           <CardDescription>Inserisci la tua nuova password</CardDescription>
         </CardHeader>
         <CardContent>
@@ -105,7 +101,9 @@ function ResetPasswordForm() {
                   type="button"
                   onClick={() => setShowNewPassword((v) => !v)}
                   className="absolute inset-y-0 right-0 px-3 flex items-center text-muted-foreground"
-                  aria-label={showNewPassword ? "Nascondi password" : "Mostra password"}
+                  aria-label={
+                    showNewPassword ? "Nascondi password" : "Mostra password"
+                  }
                 >
                   {showNewPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -115,7 +113,9 @@ function ResetPasswordForm() {
                 </button>
               </div>
               {errors.newPassword && (
-                <p className="text-sm text-red-600">{errors.newPassword.message}</p>
+                <p className="text-sm text-red-600">
+                  {errors.newPassword.message}
+                </p>
               )}
             </div>
             <div className="space-y-2">
@@ -131,7 +131,11 @@ function ResetPasswordForm() {
                   type="button"
                   onClick={() => setShowConfirmPassword((v) => !v)}
                   className="absolute inset-y-0 right-0 px-3 flex items-center text-muted-foreground"
-                  aria-label={showConfirmPassword ? "Nascondi password" : "Mostra password"}
+                  aria-label={
+                    showConfirmPassword
+                      ? "Nascondi password"
+                      : "Mostra password"
+                  }
                 >
                   {showConfirmPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -161,39 +165,29 @@ function ResetPasswordForm() {
           </p>
         </CardFooter>
       </Card>
-      </div>
-    </>
+    </div>
   );
 }
 
 function LoadingFallback() {
   return (
-    <>
-      <Head>
-        <title>Reimposta la tua password - FollowerGratis.it</title>
-        <meta 
-          name="description" 
-          content="Hai dimenticato la password? Reimposta facilmente l'accesso al tuo account FollowerGratis.it in pochi secondi." 
-        />
-      </Head>
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="flex justify-center mb-4">
-              <span className="text-2xl font-bold text-slate-800 mr-2">
-                <span className="text-[#2150C2]">Follower</span>
-                <span className="text-[#CD41B4]">Gratis</span>
-              </span>
-            </div>
-            <CardTitle className="text-2xl">Reimposta Password</CardTitle>
-            <CardDescription>Caricamento...</CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </CardContent>
-        </Card>
-      </div>
-    </>
+    <div className="min-h-screen flex items-center justify-center">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-4">
+            <span className="text-2xl font-bold text-slate-800 mr-2">
+              <span className="text-[#2150C2]">Follower</span>
+              <span className="text-[#CD41B4]">Gratis</span>
+            </span>
+          </div>
+          <CardTitle className="text-2xl">Reimposta Password</CardTitle>
+          <CardDescription>Caricamento...</CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 

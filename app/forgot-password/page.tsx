@@ -22,7 +22,6 @@ import Link from "next/link";
 import { CardFooter } from "@/components/ui/card";
 import { toast } from "react-toastify";
 import api from "@/lib/axios";
-import Head from "next/head";
 
 export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -64,15 +63,7 @@ export default function ForgotPasswordPage() {
 
   if (isEmailSent) {
     return (
-      <>
-        <Head>
-          <title>Reimposta la tua password - FollowerGratis.it</title>
-          <meta 
-            name="description" 
-            content="Hai dimenticato la password? Reimposta facilmente l'accesso al tuo account FollowerGratis.it in pochi secondi." 
-          />
-        </Head>
-        <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
@@ -87,8 +78,8 @@ export default function ForgotPasswordPage() {
             <div className="space-y-4">
               <div className="text-center text-sm text-muted-foreground">
                 <p>
-                  Ti abbiamo inviato un&apos;email con le istruzioni per reimpostare
-                  la tua password.
+                  Ti abbiamo inviato un&apos;email con le istruzioni per
+                  reimpostare la tua password.
                 </p>
                 <p className="mt-2">
                   Controlla anche la cartella spam se non trovi l'email.
@@ -115,21 +106,12 @@ export default function ForgotPasswordPage() {
             </p>
           </CardFooter>
         </Card>
-        </div>
-      </>
+      </div>
     );
   }
 
   return (
-    <>
-      <Head>
-        <title>Reimposta la tua password - FollowerGratis.it</title>
-        <meta 
-          name="description" 
-          content="Hai dimenticato la password? Reimposta facilmente l'accesso al tuo account FollowerGratis.it in pochi secondi." 
-        />
-      </Head>
-      <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
@@ -172,7 +154,6 @@ export default function ForgotPasswordPage() {
           </p>
         </CardFooter>
       </Card>
-      </div>
-    </>
+    </div>
   );
 }

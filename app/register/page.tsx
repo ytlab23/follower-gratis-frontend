@@ -18,7 +18,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, Eye, EyeOff } from "lucide-react";
-import Head from "next/head";
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,16 +44,8 @@ export default function RegisterPage() {
   };
 
   return (
-    <>
-      <Head>
-        <title>Registrati su FollowerGratis.it - Crea il tuo account gratis</title>
-        <meta 
-          name="description" 
-          content="Apri subito un account gratuito su FollowerGratis.it e inizia a far crescere il tuo profilo con i nostri strumenti semplici e veloci." 
-        />
-      </Head>
-      <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center">
+      <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <span className="text-2xl font-bold text-slate-800 mr-2">
@@ -137,7 +128,6 @@ export default function RegisterPage() {
           </p>
         </CardFooter>
       </Card>
-      </div>
-    </>
+    </div>
   );
 }
