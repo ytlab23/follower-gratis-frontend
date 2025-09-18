@@ -57,6 +57,7 @@ const serviceSchema = z.object({
   cancel: z.boolean(),
   isActive: z.boolean(),
   isFree: z.boolean(),
+  orderBy: z.enum(["username", "link"]),
 });
 
 type ServiceFormData = z.infer<typeof serviceSchema>;
@@ -88,6 +89,7 @@ const AddService = () => {
       cancel: false,
       isActive: true,
       isFree: false,
+      orderBy: "username",
     },
   });
 
@@ -129,6 +131,7 @@ const AddService = () => {
       },
       isActive: data.isActive,
       isFree: data.isFree,
+      orderBy: data.orderBy,
     };
     await createService.mutateAsync(serviceData);
     setIsCreateDialogOpen(false);
@@ -144,7 +147,7 @@ const AddService = () => {
           Aggiungi Servizio
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Crea Nuovo Servizio</DialogTitle>
           <DialogDescription>
@@ -316,6 +319,39 @@ const AddService = () => {
                 )}
               />
             </div>
+            <div className="shadow-lg rounded-lg p-6 border border-orange-100">
+              <p className="mb-2">
+                Se selezioni un nome utente, l'utente utilizzerà quel nome
+                utente quando effettua un ordine. Ad esempio, i servizi di
+                follower saranno associati al nome utente.
+              </p>
+              <p>
+                Se scegli un link, l'utente utilizzerà quel link quando effettua
+                un ordine, come per i "mi piace" e i commenti.
+              </p>
+            </div>
+
+            <FormField
+              control={form.control}
+              name="orderBy"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ordina per</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleziona come ordinare" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="username">Nome utente</SelectItem>
+                      <SelectItem value="link">Link</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="flex items-center space-x-4">
               <FormField
                 control={form.control}
@@ -351,6 +387,7 @@ const AddService = () => {
                 </FormItem>
               )}
             />
+
             <Button
               type="submit"
               className="w-full"

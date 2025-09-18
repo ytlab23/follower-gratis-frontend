@@ -28,6 +28,7 @@ export interface Service {
   category?: Category;
   isFree: boolean;
   isActive: boolean;
+  orderBy: 'username' | 'link';
   createdAt: string;
   updatedAt: string;
   __v: number;
@@ -50,6 +51,7 @@ export interface CreateService {
   cancel: boolean;
   category: string;
   isActive: boolean;
+  orderBy: 'username' | 'link';
   createdAt: string;
   updatedAt: string;
   original: {
