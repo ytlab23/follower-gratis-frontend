@@ -18,6 +18,7 @@ import { useEffect } from "react";
 
 interface AddNewOrderFormProps {
   serviceId: string;
+  orderBy: string;
   min: number;
   max: number;
   onSuccess?: () => void;
@@ -29,6 +30,7 @@ export default function AddNewOrderForm({
   min,
   max,
   onSuccess,
+  orderBy,
   isFree,
 }: AddNewOrderFormProps) {
   const createOrder = useCreateOrder();
@@ -59,33 +61,38 @@ export default function AddNewOrderForm({
   const selectedType = form.watch("type");
 
   async function onSubmit(values: CreateOrderFormValues) {
-    // console.log(JSON.stringify(values, null, 2));
-
     try {
       // Validate link/username based on service type for order types that have link field
       if ("link" in values && values.link) {
-        if (isFree) {
+        if (orderBy === "username") {
+          // Automatically add @ symbol if not present
+          let username = values.link.trim();
+          if (!username.startsWith("@")) {
+            username = "@" + username;
+            values.link = username; // Update the values object
+          }
+          
           // For free services, validate username format
-          const usernameRegex = /^@?[a-zA-Z0-9._]+$/;
-          if (!usernameRegex.test(values.link)) {
+          const usernameRegex = /^@[a-zA-Z0-9._]+$/;
+          if (!usernameRegex.test(username)) {
             form.setError("link", {
               type: "manual",
               message:
-                "Invalid username format. Use only letters, numbers, underscores, and dots.",
+                "Formato nome utente non valido. Utilizza solo lettere, numeri, trattini bassi e punti.",
             });
             return;
           }
-          if (values.link.length < 3) {
+          if (username.length < 4) { // @ + 3 chars minimum
             form.setError("link", {
               type: "manual",
-              message: "Username must be at least 3 characters long.",
+              message: "Il nome utente deve essere lungo almeno 3 caratteri.",
             });
             return;
           }
-          if (values.link.length > 30) {
+          if (username.length > 31) { // @ + 30 chars maximum
             form.setError("link", {
               type: "manual",
-              message: "Username must be less than 30 characters long.",
+              message: "Il nome utente deve contenere meno di 30 caratteri.",
             });
             return;
           }
@@ -96,7 +103,7 @@ export default function AddNewOrderForm({
           } catch {
             form.setError("link", {
               type: "manual",
-              message: "Invalid URL format. Please enter a valid URL.",
+              message: "Formato URL non valido. Inserisci un URL valido.",
             });
             return;
           }
@@ -120,7 +127,7 @@ export default function AddNewOrderForm({
       console.log(error);
       form.setError("root", {
         type: "manual",
-        message: "Failed to create order",
+        message: "Impossibile creare l'ordine",
       });
     }
   }
@@ -135,16 +142,22 @@ export default function AddNewOrderForm({
             name="link"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{isFree ? "Username" : "Link"}</FormLabel>
+                <FormLabel>
+                  {orderBy === "username" ? "Username" : "Link"}
+                </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={isFree ? "username" : "https://example.com"}
+                    placeholder={
+                      orderBy === "username"
+                        ? "username"
+                        : "https://example.com"
+                    }
                     {...field}
                     value={field.value ?? ""}
                   />
                 </FormControl>
                 <FormMessage />
-                {isFree ? (
+                {orderBy === "username" ? (
                   <p className="text-xs text-muted-foreground mt-1">
                     Enter username (e.g., username, @username, user.name)
                   </p>
@@ -230,7 +243,7 @@ export default function AddNewOrderForm({
             />
           </div>
         )}
-        
+
         <Button
           type="submit"
           className="w-full"

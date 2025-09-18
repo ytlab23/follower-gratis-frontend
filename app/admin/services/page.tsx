@@ -368,6 +368,7 @@ export default function ServicesPage() {
             <AddNewOrderForm
               serviceId={selectedService._id}
               isFree={selectedService.isFree}
+              orderBy={selectedService.orderBy}
               min={Number(selectedService.min) || 1}
               max={Number(selectedService.max) || 999999}
               onSuccess={() => {

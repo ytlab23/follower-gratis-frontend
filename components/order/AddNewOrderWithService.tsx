@@ -31,6 +31,8 @@ export default function AddNewOrderWithService() {
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
       type: "default",
+      runs: 0,
+      interval: 0,
     },
   });
 
@@ -49,6 +51,62 @@ export default function AddNewOrderWithService() {
 
   async function onSubmit(values: CreateOrderFormValues) {
     try {
+      if ("link" in values && values.link) {
+        if (selectedService?.orderBy === "username") {
+          // Automatically add @ symbol if not present
+          let username = values.link.trim();
+          if (!username.startsWith("@")) {
+            username = "@" + username;
+            values.link = username; // Update the values object
+          }
+
+          // For free services, validate username format
+          const usernameRegex = /^@[a-zA-Z0-9._]+$/;
+          if (!usernameRegex.test(username)) {
+            form.setError("link", {
+              type: "manual",
+              message:
+                "Formato nome utente non valido. Utilizza solo lettere, numeri, trattini bassi e punti.",
+            });
+            return;
+          }
+          if (username.length < 4) {
+            // @ + 3 chars minimum
+            form.setError("link", {
+              type: "manual",
+              message: "Il nome utente deve essere lungo almeno 3 caratteri.",
+            });
+            return;
+          }
+          if (username.length > 31) {
+            // @ + 30 chars maximum
+            form.setError("link", {
+              type: "manual",
+              message: "Il nome utente deve contenere meno di 30 caratteri.",
+            });
+            return;
+          }
+        } else {
+          // For paid services, validate URL format
+          try {
+            new URL(values.link);
+          } catch {
+            form.setError("link", {
+              type: "manual",
+              message: "Formato URL non valido. Inserisci un URL valido.",
+            });
+            return;
+          }
+        }
+      }
+
+      if (isFree) {
+        if (values.type === "default") {
+          values.runs = 0;
+          values.interval = 0;
+        }
+      }
+
       await createOrder.mutateAsync(values);
       form.reset({
         type: "default",
@@ -83,7 +141,9 @@ export default function AddNewOrderWithService() {
                   <SelectTrigger>
                     <SelectValue
                       placeholder={
-                        isLoading ? "Caricamento servizi..." : "Seleziona un servizio"
+                        isLoading
+                          ? "Caricamento servizi..."
+                          : "Seleziona un servizio"
                       }
                     />
                   </SelectTrigger>
@@ -101,69 +161,63 @@ export default function AddNewOrderWithService() {
           )}
         />
 
-        {(selectedType === "default" ||
-          selectedType === "package" ||
-          selectedType === "custom_comments" ||
-          selectedType === "mentions_with_hashtags" ||
-          selectedType === "mentions_hashtag" ||
-          selectedType === "comment_likes" ||
-          selectedType === "poll" ||
-          selectedType === "comment_replies") && (
-          <FormField
-            control={form.control}
-            name="link"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{isFree ? "Nome utente" : "Link"}</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder={isFree ? "nomeutente" : "https://esempio.com"}
-                    {...field}
-                    value={field.value ?? ""}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        <FormField
+          control={form.control}
+          name="link"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                {selectedService?.orderBy === "username"
+                  ? "Nome utente"
+                  : "Link"}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  placeholder={
+                    selectedService?.orderBy === "username"
+                      ? "nomeutente"
+                      : "https://esempio.com"
+                  }
+                  {...field}
+                  value={field.value ?? ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        {(selectedType === "default" ||
-          selectedType === "mentions_with_hashtags" ||
-          selectedType === "mentions_hashtag" ||
-          selectedType === "comment_likes" ||
-          selectedType === "poll") && (
-          <FormField
-            control={form.control}
-            name="quantity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Quantità (Min: {selectedService?.min} e Max: {selectedService?.max})
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder={
-                      selectedService
-                        ? `Min: ${selectedService.min} e Max ${selectedService.max}`
-                        : "Seleziona prima un servizio"
-                    }
-                    min={selectedService?.min}
-                    max={selectedService?.max}
-                    disabled={!selectedService}
-                    {...field}
-                    value={field.value ?? ""}
-                    onChange={(e) =>
-                      field.onChange(Number.parseInt(e.target.value) || 0)
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        <FormField
+          control={form.control}
+          name="quantity"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Quantità (Min: {selectedService?.min} e Max:{" "}
+                {selectedService?.max})
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="number"
+                  placeholder={
+                    selectedService
+                      ? `Min: ${selectedService.min} e Max ${selectedService.max}`
+                      : "Seleziona prima un servizio"
+                  }
+                  min={selectedService?.min}
+                  max={selectedService?.max}
+                  disabled={!selectedService}
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) =>
+                    field.onChange(Number.parseInt(e.target.value) || 0)
+                  }
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {selectedType === "default" && !isFree && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -180,7 +234,7 @@ export default function AddNewOrderWithService() {
                       value={field.value ?? ""}
                       onChange={(e) =>
                         field.onChange(
-                          Number.parseInt(e.target.value) || undefined
+                          e.target.value ? Number.parseInt(e.target.value) : 0
                         )
                       }
                     />
@@ -201,7 +255,9 @@ export default function AddNewOrderWithService() {
                       {...field}
                       value={field.value ?? ""}
                       onChange={(e) =>
-                        field.onChange(Number.parseInt(e.target.value) || 0)
+                        field.onChange(
+                          e.target.value ? Number.parseInt(e.target.value) : 0
+                        )
                       }
                     />
                   </FormControl>
@@ -216,6 +272,9 @@ export default function AddNewOrderWithService() {
           type="submit"
           className="w-full"
           disabled={createOrder.isPending || isLoading || !selectedService}
+          onClick={() => {
+            console.log(form.getValues());
+          }}
         >
           {createOrder.isPending ? "Creazione ordine..." : "Crea ordine"}
         </Button>
