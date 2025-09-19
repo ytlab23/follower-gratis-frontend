@@ -62,9 +62,7 @@ export function useCancelOrders() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
-      toast.success(
-        data.data[0].cancel.error || "Ordini annullati con successo!"
-      );
+      toast.success("Ordini annullati con successo!");
     },
   });
 }

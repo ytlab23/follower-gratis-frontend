@@ -293,15 +293,7 @@ export default function OrdersPage() {
                       </TableCell>
                       <TableCell>
                         <div className="max-w-48">
-                          <a
-                            href={order.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline flex items-center gap-1 truncate"
-                          >
-                            <span className="truncate">{order.link}</span>
-                            <ExternalLink className="h-3 w-3 flex-shrink-0" />
-                          </a>
+                          <span className="truncate">{order.link}</span>
                         </div>
                       </TableCell>
                       <TableCell>

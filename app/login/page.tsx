@@ -18,7 +18,6 @@ import {
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { CardFooter } from "@/components/ui/card";
-import { toast } from "react-toastify";
 
 // Update the CardContent to include CardFooter
 export default function LoginPage() {
@@ -38,10 +37,9 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       await login(data.email, data.password);
+      setIsLoading(false);
     } catch (error) {
-      toast.error("Si è verificato un errore durante l'accesso");
       console.log(error);
-    } finally {
       setIsLoading(false);
     }
   };

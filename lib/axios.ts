@@ -1,9 +1,10 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 
 const api = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_URL || "https://top-smm.vercel.app/api/",
+  // baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api/",
+  baseURL:process.env.NEXT_PUBLIC_API_URL || "https://top-smm.vercel.app/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -52,6 +53,11 @@ api.interceptors.response.use(
         window.location.href = "/login";
       }
     }
+
+    if (error.response?.data?.message) {
+      toast.error(error.response.data.message);
+    }
+
     return Promise.reject(error);
   }
 );
