@@ -46,10 +46,12 @@ import {
 } from "@/components/ui/select";
 import { useCategories } from "@/hooks/use-categories";
 import AddNewOrderForm from "@/components/order/AddNewOrder";
+import { useTranslation } from "@/lib/translations";
 
 export default function ServicesPage() {
   const { data: services = [], isLoading } = useServices();
   const deleteService = useDeleteService();
+  const { t } = useTranslation('services');
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -97,8 +99,8 @@ export default function ServicesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Servizi</h1>
-          <p className="text-muted-foreground">Sfoglia e ordina servizi SMM</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+          <p className="text-muted-foreground">{t('subtitle')}</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center border rounded-lg p-1">
@@ -127,7 +129,7 @@ export default function ServicesPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Cerca servizi..."
+                placeholder={t('search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -138,14 +140,14 @@ export default function ServicesPage() {
               onValueChange={setSelectedCategory}
             >
               <SelectTrigger className="w-48">
-                <SelectValue placeholder="Tutte le categorie" />
+                <SelectValue placeholder={t('allCategories')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tutte le categorie</SelectItem>
+                <SelectItem value="all">{t('allCategories')}</SelectItem>
                 {isCategoryLoading ? (
-                  <p className="p-2 text-sm">Caricamento...</p>
+                  <p className="p-2 text-sm">{t('loading')}</p>
                 ) : !categories || categories?.length === 0 ? (
-                  <p className="p-2 text-sm">Nessuna categoria disponibile</p>
+                  <p className="p-2 text-sm">{t('noCategories')}</p>
                 ) : (
                   categories.map((category, index) => (
                     <SelectItem key={index} value={category._id}>
@@ -164,12 +166,12 @@ export default function ServicesPage() {
           <CardContent className="text-center py-12">
             <Package className="mx-auto h-12 w-12 text-gray-400 mb-4" />
             <h3 className="text-lg font-semibold mb-2">
-              Nessun servizio trovato
+              {t('noServiceFound')}
             </h3>
             <p className="text-muted-foreground">
               {searchTerm || selectedCategory !== "all"
-                ? "Prova a modificare i criteri di ricerca o filtro"
-                : "Al momento non ci sono servizi disponibili"}
+                ? t('tryDifferentSearch')
+                : t('currentlyNoServices')}
             </p>
           </CardContent>
         </Card>
@@ -189,14 +191,14 @@ export default function ServicesPage() {
                     <p className="text-2xl font-bold text-blue-600">
                       ${service.rate}
                     </p>
-                    <p className="text-xs text-muted-foreground">per 1000</p>
+                    <p className="text-xs text-muted-foreground">{t('perThousandShort')}</p>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Min/Max:</span>
+                    <span className="text-muted-foreground">{t('minMax')}</span>
                     <span>
                       {service.min} - {service.max}
                     </span>
@@ -226,7 +228,7 @@ export default function ServicesPage() {
                       onClick={() => handleOrderService(service)}
                     >
                       <ShoppingCart className="mr-2 h-4 w-4" />
-                      Ordina Ora
+                      {t('orderNowButton')}
                     </Button>
                   </div>
                 </div>
@@ -237,21 +239,21 @@ export default function ServicesPage() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Tutti i servizi</CardTitle>
+            <CardTitle>{t('allServicesTitle')}</CardTitle>
             <CardDescription>
-              Elenco completo dei servizi disponibili
+              {t('completeServicesList')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Servizio</TableHead>
-                  <TableHead>Categoria</TableHead>
-                  <TableHead>Tariffa</TableHead>
-                  <TableHead>Min/Max</TableHead>
-                  <TableHead>Funzionalità</TableHead>
-                  <TableHead>Azioni</TableHead>
+                  <TableHead>{t('service')}</TableHead>
+                  <TableHead>{t('category')}</TableHead>
+                  <TableHead>{t('rate')}</TableHead>
+                  <TableHead>{t('minMax')}</TableHead>
+                  <TableHead>{t('features')}</TableHead>
+                  <TableHead>{t('actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -269,7 +271,7 @@ export default function ServicesPage() {
                       <Badge variant="outline">
                         {service.category
                           ? service.category.name
-                          : "Nessuna categoria"}
+                          : t('noCategories')}
                       </Badge>
                     </TableCell>
                     <TableCell className="font-semibold text-blue-600">
@@ -304,7 +306,7 @@ export default function ServicesPage() {
                           onClick={() => handleOrderService(service)}
                         >
                           <ShoppingCart className="h-4 w-4 mr-1" />
-                          Ordina
+                          {t('order')}
                         </Button>
                         <Button
                           variant="outline"
@@ -328,10 +330,10 @@ export default function ServicesPage() {
       <Dialog open={isOrderDialogOpen} onOpenChange={setIsOrderDialogOpen}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Crea Ordine</DialogTitle>
+            <DialogTitle>{t('createOrder')}</DialogTitle>
             <DialogDescription>
               {selectedService &&
-                `Ordina ${selectedService.name} - $${selectedService.rate} per 1000`}
+                t('orderService', { serviceName: selectedService.name, rate: String(selectedService.rate) })}
             </DialogDescription>
           </DialogHeader>
           {selectedService && (

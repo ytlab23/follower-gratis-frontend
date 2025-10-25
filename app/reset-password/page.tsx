@@ -23,6 +23,7 @@ import Link from "next/link";
 import { CardFooter } from "@/components/ui/card";
 import { toast } from "react-toastify";
 import api from "@/lib/axios";
+import { useTranslation } from "@/lib/translations";
 
 function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +32,7 @@ function ResetPasswordForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { t } = useTranslation('auth');
 
   const {
     register,
@@ -45,10 +47,10 @@ function ResetPasswordForm() {
     if (tokenFromUrl) {
       setToken(tokenFromUrl);
     } else {
-      toast.error("Token di reset password non valido");
+      toast.error(t('resetPassword.invalidToken'));
       router.push("/forgot-password");
     }
-  }, [searchParams, router]);
+  }, [searchParams, router, t]);
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     setIsLoading(true);
@@ -59,13 +61,13 @@ function ResetPasswordForm() {
       });
 
       if (response.data.status === "success") {
-        toast.success("Password reimpostata con successo!");
+        toast.success(t('resetPassword.successMessage'));
         router.push("/login");
       }
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message ||
-        "Si è verificato un errore durante il reset della password";
+        t('resetPassword.errorMessage');
       toast.error(errorMessage);
       console.log(error);
     } finally {
@@ -83,18 +85,18 @@ function ResetPasswordForm() {
               <span className="text-[#CD41B4]">Gratis</span>
             </span>
           </div>
-          <CardTitle className="text-2xl">Reimposta Password</CardTitle>
-          <CardDescription>Inserisci la tua nuova password</CardDescription>
+          <CardTitle className="text-2xl">{t('resetPassword.title')}</CardTitle>
+          <CardDescription>{t('resetPassword.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="newPassword">Nuova Password</Label>
+              <Label htmlFor="newPassword">{t('resetPassword.newPassword')}</Label>
               <div className="relative">
                 <Input
                   id="newPassword"
                   type={showNewPassword ? "text" : "password"}
-                  placeholder="Inserisci la nuova password"
+                  placeholder={t('resetPassword.newPassword')}
                   {...register("newPassword")}
                 />
                 <button
@@ -102,7 +104,7 @@ function ResetPasswordForm() {
                   onClick={() => setShowNewPassword((v) => !v)}
                   className="absolute inset-y-0 right-0 px-3 flex items-center text-muted-foreground"
                   aria-label={
-                    showNewPassword ? "Nascondi password" : "Mostra password"
+                    showNewPassword ? t('login.hidePassword') : t('login.showPassword')
                   }
                 >
                   {showNewPassword ? (
@@ -119,12 +121,12 @@ function ResetPasswordForm() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Conferma Password</Label>
+              <Label htmlFor="confirmPassword">{t('resetPassword.confirmPassword')}</Label>
               <div className="relative">
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Conferma la nuova password"
+                  placeholder={t('resetPassword.confirmPassword')}
                   {...register("confirmPassword")}
                 />
                 <button
@@ -133,8 +135,8 @@ function ResetPasswordForm() {
                   className="absolute inset-y-0 right-0 px-3 flex items-center text-muted-foreground"
                   aria-label={
                     showConfirmPassword
-                      ? "Nascondi password"
-                      : "Mostra password"
+                      ? t('login.hidePassword')
+                      : t('login.showPassword')
                   }
                 >
                   {showConfirmPassword ? (
@@ -152,24 +154,26 @@ function ResetPasswordForm() {
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Reimposta Password
+              {t('resetPassword.resetButton')}
             </Button>
+            <div className="flex justify-center pt-4">
+              <p className="text-sm text-muted-foreground">
+                {t('resetPassword.rememberPassword')}{" "}
+                <Link href="/login" className="text-blue-600 hover:underline">
+                  {t('login.loginButton')}
+                </Link>
+              </p>
+            </div>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
-            Ricordi la tua password?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline">
-              Accedi
-            </Link>
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );
 }
 
 function LoadingFallback() {
+  const { t } = useTranslation('auth');
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <Card className="w-full max-w-md">
@@ -180,8 +184,8 @@ function LoadingFallback() {
               <span className="text-[#CD41B4]">Gratis</span>
             </span>
           </div>
-          <CardTitle className="text-2xl">Reimposta Password</CardTitle>
-          <CardDescription>Caricamento...</CardDescription>
+          <CardTitle className="text-2xl">{t('resetPassword.title')}</CardTitle>
+          <CardDescription>{t('resetPassword.loading')}</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
           <Loader2 className="h-8 w-8 animate-spin" />

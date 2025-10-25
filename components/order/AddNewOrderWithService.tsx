@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { CreateOrderFormValues, createOrderSchema } from "@/schemas/order";
 import { useCreateOrder } from "@/hooks/use-orders";
 import { useServices } from "@/hooks/use-services";
+import { useTranslation } from "@/lib/translations";
 import React from "react";
 import {
   Select,
@@ -27,6 +28,7 @@ import {
 export default function AddNewOrderWithService() {
   const { data: services = [], isLoading } = useServices();
   const createOrder = useCreateOrder();
+  const { t } = useTranslation('newOrder');
   const form = useForm<CreateOrderFormValues>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
@@ -65,8 +67,7 @@ export default function AddNewOrderWithService() {
           if (!usernameRegex.test(username)) {
             form.setError("link", {
               type: "manual",
-              message:
-                "Formato nome utente non valido. Utilizza solo lettere, numeri, trattini bassi e punti.",
+              message: t('invalidUsernameFormat'),
             });
             return;
           }
@@ -74,7 +75,7 @@ export default function AddNewOrderWithService() {
             // @ + 3 chars minimum
             form.setError("link", {
               type: "manual",
-              message: "Il nome utente deve essere lungo almeno 3 caratteri.",
+              message: t('usernameTooShort'),
             });
             return;
           }
@@ -82,7 +83,7 @@ export default function AddNewOrderWithService() {
             // @ + 30 chars maximum
             form.setError("link", {
               type: "manual",
-              message: "Il nome utente deve contenere meno di 30 caratteri.",
+              message: t('usernameTooLong'),
             });
             return;
           }
@@ -93,7 +94,7 @@ export default function AddNewOrderWithService() {
           } catch {
             form.setError("link", {
               type: "manual",
-              message: "Formato URL non valido. Inserisci un URL valido.",
+              message: t('invalidUrlFormat'),
             });
             return;
           }
@@ -115,7 +116,7 @@ export default function AddNewOrderWithService() {
       console.log(error);
       form.setError("root", {
         type: "manual",
-        message: "Creazione ordine fallita",
+        message: t('orderCreationFailed'),
       });
     }
   }
@@ -128,7 +129,7 @@ export default function AddNewOrderWithService() {
           name="serviceId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Servizio</FormLabel>
+              <FormLabel>{t('service')}</FormLabel>
               <Select
                 onValueChange={(value) => {
                   field.onChange(value ? value : "");
@@ -142,8 +143,8 @@ export default function AddNewOrderWithService() {
                     <SelectValue
                       placeholder={
                         isLoading
-                          ? "Caricamento servizi..."
-                          : "Seleziona un servizio"
+                          ? t('loadingServices')
+                          : t('selectService')
                       }
                     />
                   </SelectTrigger>
@@ -151,7 +152,7 @@ export default function AddNewOrderWithService() {
                 <SelectContent>
                   {services.map((service, index) => (
                     <SelectItem key={index} value={service._id}>
-                      {`${service.name} (Tariffa: ${service.rate})`}
+                      {`${service.name} (${t('serviceRate', { rate: String(service.rate) })})`}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -168,15 +169,15 @@ export default function AddNewOrderWithService() {
             <FormItem>
               <FormLabel>
                 {selectedService?.orderBy === "username"
-                  ? "Nome utente"
-                  : "Link"}
+                  ? t('username')
+                  : t('link')}
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder={
                     selectedService?.orderBy === "username"
-                      ? "nomeutente"
-                      : "https://esempio.com"
+                      ? t('usernamePlaceholder')
+                      : t('linkPlaceholder')
                   }
                   {...field}
                   value={field.value ?? ""}
@@ -193,16 +194,21 @@ export default function AddNewOrderWithService() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Quantità (Min: {selectedService?.min} e Max:{" "}
-                {selectedService?.max})
+                {t('quantity', {
+                  min: String(selectedService?.min || 0),
+                  max: String(selectedService?.max || 0)
+                })}
               </FormLabel>
               <FormControl>
                 <Input
                   type="number"
                   placeholder={
                     selectedService
-                      ? `Min: ${selectedService.min} e Max ${selectedService.max}`
-                      : "Seleziona prima un servizio"
+                      ? t('quantityPlaceholder', {
+                          min: String(selectedService.min),
+                          max: String(selectedService.max)
+                        })
+                      : t('selectServiceFirst')
                   }
                   min={selectedService?.min}
                   max={selectedService?.max}
@@ -226,7 +232,7 @@ export default function AddNewOrderWithService() {
               name="runs"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Esecuzioni (Opzionale)</FormLabel>
+                  <FormLabel>{t('runs')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -248,7 +254,7 @@ export default function AddNewOrderWithService() {
               name="interval"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Intervallo</FormLabel>
+                  <FormLabel>{t('interval')}</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -276,7 +282,7 @@ export default function AddNewOrderWithService() {
             console.log(form.getValues());
           }}
         >
-          {createOrder.isPending ? "Creazione ordine..." : "Crea ordine"}
+          {createOrder.isPending ? t('creatingOrder') : t('createOrder')}
         </Button>
       </form>
     </Form>

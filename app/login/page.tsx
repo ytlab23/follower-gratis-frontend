@@ -17,13 +17,14 @@ import {
 } from "@/components/ui/card";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { CardFooter } from "@/components/ui/card";
+import { useTranslation } from "@/lib/translations";
 
 // Update the CardContent to include CardFooter
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
+  const { t } = useTranslation('auth');
 
   const {
     register,
@@ -54,17 +55,17 @@ export default function LoginPage() {
               <span className="text-[#CD41B4]">Gratis</span>
             </span>
           </div>
-          <CardTitle className="text-2xl">Bentornato</CardTitle>
-          <CardDescription>Accedi al tuo account</CardDescription>
+          <CardTitle className="text-2xl">{t('login.title')}</CardTitle>
+          <CardDescription>{t('login.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('login.email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Inserisci la tua email"
+                placeholder={t('login.emailPlaceholder')}
                 {...register("email")}
               />
               {errors.email && (
@@ -72,12 +73,12 @@ export default function LoginPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('login.password')}</Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Inserisci la tua password"
+                  placeholder={t('login.passwordPlaceholder')}
                   className="pr-10"
                   {...register("password")}
                 />
@@ -86,9 +87,9 @@ export default function LoginPage() {
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground"
                   aria-label={
-                    showPassword ? "Nascondi password" : "Mostra password"
+                    showPassword ? t('login.hidePassword') : t('login.showPassword')
                   }
-                  title={showPassword ? "Nascondi password" : "Mostra password"}
+                  title={showPassword ? t('login.hidePassword') : t('login.showPassword')}
                 >
                   {showPassword ? (
                     <EyeOff className="h-4 w-4" />
@@ -105,26 +106,26 @@ export default function LoginPage() {
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Accedi
+              {t('login.loginButton')}
             </Button>
+            <div className="flex flex-col items-center space-y-2 pt-4">
+              <p className="text-sm text-muted-foreground">
+                {t('login.noAccount')}{" "}
+                <Link href="/register" className="text-blue-600 hover:underline">
+                  {t('login.registerLink')}
+                </Link>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                <Link
+                  href="/forgot-password"
+                  className="text-blue-600 hover:underline"
+                >
+                  {t('login.forgotPassword')}
+                </Link>
+              </p>
+            </div>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col items-center space-y-2">
-          <p className="text-sm text-muted-foreground">
-            Non hai un account?{" "}
-            <Link href="/register" className="text-blue-600 hover:underline">
-              Registrati
-            </Link>
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <Link
-              href="/forgot-password"
-              className="text-blue-600 hover:underline"
-            >
-              Password dimenticata?
-            </Link>
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );

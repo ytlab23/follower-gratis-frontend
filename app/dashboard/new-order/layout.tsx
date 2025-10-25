@@ -4,7 +4,7 @@ export const metadata: Metadata = {
   title: "Nuovo Ordine | FollowerGratis.it",
 };
 
-export default function LoginLayout({
+export default function NewOrderLayout({
   children,
 }: {
   children: React.ReactNode;

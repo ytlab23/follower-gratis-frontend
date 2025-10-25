@@ -1,0 +1,37 @@
+{
+  "welcome": "Welcome back, {{name}}!",
+  "welcomeMessage": "Here's what's happening today on your SMM panel.",
+  "createOrder": "Create New Order",
+  "viewOrders": "Orders",
+  "stats": {
+    "totalServices": "Total Services",
+    "servicesDescription": "Available services",
+    "totalOrders": "Total Orders",
+    "ordersDescription": "Total orders",
+    "completedOrders": "Completed Orders",
+    "completedDescription": "Successfully completed",
+    "pendingOrders": "Pending Orders",
+    "pendingDescription": "Awaiting processing"
+  },
+  "recentOrders": {
+    "title": "Recent Orders",
+    "description": "Your latest order activities",
+    "noOrders": "No orders yet",
+    "orderNumber": "Order #{{id}}",
+    "quantity": "{{quantity}} units",
+    "price": "${{price}}"
+  },
+  "navigation": {
+    "newOrder": "New Order",
+    "orders": "Orders",
+    "services": "Services",
+    "dashboard": "Dashboard"
+  },
+  "actions": {
+    "viewDetails": "View Details",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  }
+}

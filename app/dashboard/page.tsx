@@ -14,11 +14,13 @@ import { Badge } from "@/components/ui/badge";
 import { Package, ShoppingCart, TrendingUp, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useTranslation } from "@/lib/translations";
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
   const { data: services = [] } = useServices();
   const { data: orders = [] } = useOrders();
+  const { t } = useTranslation('dashboard');
 
   if (isLoading) {
     return (
@@ -39,30 +41,30 @@ export default function DashboardPage() {
 
   const stats = [
     {
-      title: "Totale Servizi",
+      title: t('stats.totalServices'),
       value: services.length,
-      description: "Servizi disponibili",
+      description: t('stats.servicesDescription'),
       icon: Package,
       color: "text-blue-600",
     },
     {
-      title: "Totale Ordini",
+      title: t('stats.totalOrders'),
       value: orders.length,
-      description: "Ordini totali",
+      description: t('stats.ordersDescription'),
       icon: ShoppingCart,
       color: "text-green-600",
     },
     {
-      title: "Ordini Completati",
+      title: t('stats.completedOrders'),
       value: orders.filter((order) => order.status === "completed").length,
-      description: "Completati con successo",
+      description: t('stats.completedDescription'),
       icon: TrendingUp,
       color: "text-purple-600",
     },
     {
-      title: "Ordini in Attesa",
+      title: t('stats.pendingOrders'),
       value: orders.filter((order) => order.status === "pending").length,
-      description: "In attesa di elaborazione",
+      description: t('stats.pendingDescription'),
       icon: Users,
       color: "text-orange-600",
     },
@@ -75,14 +77,14 @@ export default function DashboardPage() {
       <section className="overflow-hidden rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 p-8 text-white">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="space-y-4">
-            <h2 className="text-3xl font-bold">Bentornato, {user?.name}!</h2>
+            <h2 className="text-3xl font-bold">{t('welcome', { name: user?.name || '' })}</h2>
             <p className="max-w-[600px] text-white/80">
-              Ecco cosa sta succedendo oggi sul tuo pannello SMM.
+              {t('welcomeMessage')}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/dashboard/new-order">
                 <Button className="rounded-2xl bg-white text-indigo-700 hover:bg-white/90">
-                  Crea Nuovo Ordine
+                  {t('createOrder')}
                 </Button>
               </Link>
               <Link href="/dashboard/orders">
@@ -90,7 +92,7 @@ export default function DashboardPage() {
                   variant="outline"
                   className="rounded-2xl bg-transparent border-white text-white hover:bg-white/10"
                 >
-                  Ordini
+                  {t('viewOrders')}
                 </Button>
               </Link>
             </div>
@@ -129,8 +131,8 @@ export default function DashboardPage() {
       <div className="grid gap-4">
         <Card>
           <CardHeader>
-            <CardTitle>Ordini Recenti</CardTitle>
-            <CardDescription>Le tue ultime attività di ordine</CardDescription>
+            <CardTitle>{t('recentOrders.title')}</CardTitle>
+            <CardDescription>{t('recentOrders.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -142,10 +144,10 @@ export default function DashboardPage() {
                   >
                     <div className="space-y-1">
                       <p className="text-sm font-medium">
-                        Ordine #{order.topsmmOrderId}
+                        {t('recentOrders.orderNumber', { id: String(order.topsmmOrderId) })}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {order.quantity} unità • ${order.price}
+                        {t('recentOrders.quantity', { quantity: String(order.quantity) })} • ${order.price}
                       </p>
                     </div>
                     <Badge
@@ -160,18 +162,18 @@ export default function DashboardPage() {
                       }
                     >
                       {order.status === "completed"
-                        ? "Completato"
+                        ? t('status.completed')
                         : order.status === "pending"
-                        ? "In Attesa"
+                        ? t('status.pending')
                         : order.status === "failed"
-                        ? "Fallito"
+                        ? t('status.failed')
                         : order.status}
                     </Badge>
                   </div>
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  Nessun ordine ancora
+                  {t('recentOrders.noOrders')}
                 </p>
               )}
             </div>

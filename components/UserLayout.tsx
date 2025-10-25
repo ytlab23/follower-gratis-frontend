@@ -19,6 +19,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -81,7 +82,10 @@ export default function UserLayout({
             </Breadcrumb>
           </div>
 
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            {/* <LanguageToggle /> */}
+            <ThemeToggle />
+          </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
       </SidebarInset>

@@ -45,6 +45,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { format } from "@/lib/date-utils";
+import { useTranslation } from "@/lib/translations";
 
 const statusConfig = {
   pending: {
@@ -83,6 +84,7 @@ export default function OrdersPage() {
   const { data: orders = [], isLoading } = useOrders();
   const { data: services = [] } = useServices();
   const refillOrders = useRefillOrders();
+  const { t } = useTranslation('orders');
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -165,9 +167,9 @@ export default function OrdersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Ordini</h1>
+        <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
         <p className="text-muted-foreground">
-          Gestisci e monitora i tuoi ordini SMM
+          {t('subtitle')}
         </p>
       </div>
 
@@ -175,48 +177,48 @@ export default function OrdersPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Totale Ordini</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('totalOrders')}</CardTitle>
             <ShoppingCart className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalOrders}</div>
-            <p className="text-xs text-muted-foreground">Ordini totali</p>
+            <p className="text-xs text-muted-foreground">{t('ordersDescription')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completati</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('completedOrders')}</CardTitle>
             <CheckCircle className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.completedOrders}</div>
             <p className="text-xs text-muted-foreground">
-              Completati con successo
+              {t('completedDescription')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">In Attesa</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('pendingOrders')}</CardTitle>
             <Clock className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.pendingOrders}</div>
-            <p className="text-xs text-muted-foreground">Ordini in attesa</p>
+            <p className="text-xs text-muted-foreground">{t('pendingDescription')}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">In Corso</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('inProgressOrders')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.inProgressOrders}</div>
             <p className="text-xs text-muted-foreground">
-              Attualmente in elaborazione
+              {t('inProgressDescription')}
             </p>
           </CardContent>
         </Card>
@@ -229,7 +231,7 @@ export default function OrdersPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Cerca per ID ordine o link..."
+                placeholder={t('search')}
                 value={searchTerm}
                 onChange={(e) => handleFilterChange(e.target.value, statusFilter)}
                 className="pl-10"
@@ -238,15 +240,15 @@ export default function OrdersPage() {
             <Select value={statusFilter} onValueChange={(value) => handleFilterChange(searchTerm, value)}>
               <SelectTrigger className="w-48">
                 <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Filtra per stato" />
+                <SelectValue placeholder={t('filterByStatus')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tutti gli stati</SelectItem>
-                <SelectItem value="pending">In Attesa</SelectItem>
-                <SelectItem value="in progress">In Corso</SelectItem>
-                <SelectItem value="completed">Completato</SelectItem>
-                <SelectItem value="partial">Parziale</SelectItem>
-                <SelectItem value="failed">Fallito</SelectItem>
+                <SelectItem value="all">{t('allStatuses')}</SelectItem>
+                <SelectItem value="pending">{t('pendingOrders')}</SelectItem>
+                <SelectItem value="in progress">{t('inProgressOrders')}</SelectItem>
+                <SelectItem value="completed">{t('completedOrders')}</SelectItem>
+                <SelectItem value="partial">{t('partial')}</SelectItem>
+                <SelectItem value="failed">{t('failed')}</SelectItem>
               </SelectContent>
             </Select>
             {(searchTerm || statusFilter !== "all") && (
@@ -255,7 +257,7 @@ export default function OrdersPage() {
                 onClick={() => handleFilterChange("", "all")}
               >
                 <X className="h-4 w-4 mr-2" />
-                Pulisci
+                {t('clear')}
               </Button>
             )}
           </div>
@@ -267,13 +269,13 @@ export default function OrdersPage() {
         <CardHeader>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <CardTitle>Storico Ordini</CardTitle>
+              <CardTitle>{t('orderHistory')}</CardTitle>
               <CardDescription>
-                {filteredOrders.length} di {orders.length} ordini
+                {t('showingOrders', { current: String(filteredOrders.length), total: String(orders.length) })}
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Righe per pagina:</span>
+              <span className="text-sm text-muted-foreground">{t('rowsPerPage')}</span>
               <Select value={itemsPerPage.toString()} onValueChange={(value) => {
                 setItemsPerPage(Number(value));
                 setCurrentPage(1);
@@ -296,13 +298,13 @@ export default function OrdersPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID Ordine</TableHead>
-                  <TableHead>Servizio</TableHead>
-                  <TableHead>Target</TableHead>
-                  <TableHead>Quantità</TableHead>
-                  <TableHead>Stato</TableHead>
-                  <TableHead>Creato il</TableHead>
-                  <TableHead>Azioni</TableHead>
+                  <TableHead>{t('orderId')}</TableHead>
+                  <TableHead>{t('service')}</TableHead>
+                  <TableHead>{t('target')}</TableHead>
+                  <TableHead>{t('quantity')}</TableHead>
+                  <TableHead>{t('status')}</TableHead>
+                  <TableHead>{t('createdAt')}</TableHead>
+                  <TableHead>{t('actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -324,7 +326,7 @@ export default function OrdersPage() {
                             {getServiceName(order.service)}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {service && `$${service.rate}/1k`}
+                            {service && `$${service.rate}${t('perThousand')}`}
                           </p>
                         </div>
                       </TableCell>
@@ -367,6 +369,7 @@ export default function OrdersPage() {
                               refillOrders.mutate([Number(order.topsmmOrderId)])
                             }
                             disabled={refillOrders.isPending}
+                            title={t('refillButton')}
                           >
                             <RefreshCw className="h-3 w-3" />
                           </Button>
@@ -381,12 +384,12 @@ export default function OrdersPage() {
             <div className="text-center py-12">
               <Package className="mx-auto h-12 w-12 text-gray-400 mb-4" />
               <h3 className="text-lg font-semibold mb-2">
-                Nessun ordine trovato
+                {t('noOrdersFound')}
               </h3>
               <p className="text-muted-foreground">
                 {searchTerm || statusFilter !== "all"
-                  ? "Prova a modificare i criteri di ricerca o filtro"
-                  : "Non hai ancora effettuato ordini"}
+                  ? t('tryDifferentSearch')
+                  : t('noOrdersYet')}
               </p>
             </div>
           )}
@@ -395,7 +398,11 @@ export default function OrdersPage() {
           {filteredOrders.length > 0 && totalPages > 1 && (
             <div className="flex items-center justify-between px-2 py-4">
               <div className="text-sm text-muted-foreground">
-                Mostrando {startIndex + 1} - {Math.min(endIndex, filteredOrders.length)} di {filteredOrders.length} ordini
+                {t('showingResults', {
+                  start: String(startIndex + 1),
+                  end: String(Math.min(endIndex, filteredOrders.length)),
+                  total: String(filteredOrders.length)
+                })}
               </div>
               <div className="flex items-center space-x-2">
                 <Button
@@ -405,9 +412,9 @@ export default function OrdersPage() {
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="h-4 w-4" />
-                  Precedente
+                  {t('previous')}
                 </Button>
-                
+
                 <div className="flex items-center space-x-1">
                   {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                     let pageNum;
@@ -420,7 +427,7 @@ export default function OrdersPage() {
                     } else {
                       pageNum = currentPage - 2 + i;
                     }
-                    
+
                     return (
                       <Button
                         key={pageNum}
@@ -434,14 +441,14 @@ export default function OrdersPage() {
                     );
                   })}
                 </div>
-                
+
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
                 >
-                  Successiva
+                  {t('next')}
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>

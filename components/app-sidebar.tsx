@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/providers/auth-provider";
+import { useTranslation } from "@/lib/translations";
 import {
   Sidebar,
   SidebarContent,
@@ -36,40 +37,41 @@ interface AppSidebarProps {
 
 export function AppSidebar({ roleRoute }: AppSidebarProps) {
   const { user, logout } = useAuth();
+  const { t } = useTranslation('common');
 
   const navigation = [
     {
-      title: "Dashboard",
+      title: t('nav.dashboard'),
       url: `/${roleRoute}`,
       icon: LayoutDashboard,
       roles: ["dashboard", "admin"],
     },
     {
-      title: "Categorie",
+      title: t('nav.categories'),
       url: `/${roleRoute}/categories`,
       icon: Package,
       roles: ["admin"],
     },
     {
-      title: "Servizi",
+      title: t('nav.services'),
       url: `/${roleRoute}/services`,
       icon: Package,
       roles: ["dashboard", "admin"],
     },
     {
-      title: "Ordini",
+      title: t('nav.orders'),
       url: `/${roleRoute}/orders`,
       icon: ShoppingCart,
       roles: ["dashboard", "admin"],
     },
     {
-      title: "Nuovo Ordine",
+      title: t('nav.newOrder'),
       url: `/${roleRoute}/new-order`,
       icon: Users,
       roles: ["admin", "dashboard"],
     },
     {
-      title: "Utenti",
+      title: t('nav.users'),
       url: `/${roleRoute}/users`,
       icon: Users,
       roles: ["admin"],
@@ -95,7 +97,7 @@ export function AppSidebar({ roleRoute }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigazione</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('nav.navigation')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {filteredNavigation.map((item) => (
@@ -133,7 +135,7 @@ export function AppSidebar({ roleRoute }: AppSidebarProps) {
               >
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="h-4 w-4 mr-2" />
-                  Esci
+                  {t('nav.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

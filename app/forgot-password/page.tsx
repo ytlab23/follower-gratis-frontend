@@ -22,10 +22,12 @@ import Link from "next/link";
 import { CardFooter } from "@/components/ui/card";
 import { toast } from "react-toastify";
 import api from "@/lib/axios";
+import { useTranslation } from "@/lib/translations";
 
 export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const { t } = useTranslation('auth');
 
   const {
     register,
@@ -44,17 +46,17 @@ export default function ForgotPasswordPage() {
 
       if (response.status === 200) {
         setIsEmailSent(true);
-        toast.success("Email di reset password inviata con successo!");
+        toast.success(t('successMessage'));
       }
     } catch (error: any) {
       console.error("Password reset error:", error);
 
       if (error.response?.status === 400) {
-        toast.error("Email non valida. Controlla i dati inseriti.");
+        toast.error(t('forgotPassword.invalidEmailError'));
       } else if (error.response?.status === 403) {
-        toast.error("Account sospeso. Contatta l'amministratore.");
+        toast.error(t('forgotPassword.accountSuspendedError'));
       } else {
-        toast.error("Si è verificato un errore. Riprova più tardi.");
+        toast.error(t('forgotPassword.generalError'));
       }
     } finally {
       setIsLoading(false);
@@ -71,40 +73,40 @@ export default function ForgotPasswordPage() {
                 <Mail className="h-6 w-6" />
               </div>
             </div>
-            <CardTitle className="text-2xl">Email Inviata</CardTitle>
-            <CardDescription>Controlla la tua casella di posta</CardDescription>
+            <CardTitle className="text-2xl">{t('forgotPassword.emailSentTitle')}</CardTitle>
+            <CardDescription>{t('forgotPassword.emailSentDescription')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="text-center text-sm text-muted-foreground">
                 <p>
-                  Ti abbiamo inviato un&apos;email con le istruzioni per
-                  reimpostare la tua password.
+                  {t('forgotPassword.emailSentMessage')}
                 </p>
                 <p className="mt-2">
-                  Controlla anche la cartella spam se non trovi l'email.
+                  {t('forgotPassword.emailSentSpamMessage')}
                 </p>
               </div>
 
               <Button asChild className="w-full">
                 <Link href="/login">
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Torna al Login
+                  {t('forgotPassword.backToLogin')}
                 </Link>
               </Button>
+
+              <div className="flex justify-center pt-4">
+                <p className="text-sm text-muted-foreground">
+                  {t('forgotPassword.didNotReceiveEmail')}{" "}
+                  <button
+                    onClick={() => setIsEmailSent(false)}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {t('forgotPassword.tryAgain')}
+                  </button>
+                </p>
+              </div>
             </div>
           </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-muted-foreground">
-              Non hai ricevuto l'email?{" "}
-              <button
-                onClick={() => setIsEmailSent(false)}
-                className="text-blue-600 hover:underline"
-              >
-                Riprova
-              </button>
-            </p>
-          </CardFooter>
         </Card>
       </div>
     );
@@ -120,9 +122,9 @@ export default function ForgotPasswordPage() {
               <span className="text-[#CD41B4]">Gratis</span>
             </span>
           </div>
-          <CardTitle className="text-2xl">Password Dimenticata</CardTitle>
+          <CardTitle className="text-2xl">{t('forgotPassword.title')}</CardTitle>
           <CardDescription>
-            Inserisci la tua email per reimpostare la password
+            {t('forgotPassword.subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -132,7 +134,7 @@ export default function ForgotPasswordPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="Inserisci la tua email"
+                placeholder={t('forgotPassword.emailPlaceholder')}
                 {...register("email")}
               />
               {errors.email && (
@@ -141,18 +143,18 @@ export default function ForgotPasswordPage() {
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Invia Email di Reset
+              {t('forgotPassword.sendButton')}
             </Button>
+            <div className="flex justify-center pt-4">
+              <p className="text-sm text-muted-foreground">
+                {t('forgotPassword.backToLogin')}{" "}
+                <Link href="/login" className="text-blue-600 hover:underline">
+                  {t('login.loginButton')}
+                </Link>
+              </p>
+            </div>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground">
-            Ricordi la tua password?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline">
-              Accedi
-            </Link>
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );
