@@ -31,7 +31,7 @@ import {
   AlertDialogTitle,
 } from '../ui/alert-dialog';
 import { useMasterAdminApi } from '../../hooks/use-master-admin';
-import { ScriptAdminProfile } from '../../types/script-admin';
+import { AdminProfile } from '../../types/admin';
 
 interface MasterAdminDashboardProps {
   onRefresh?: () => void;
@@ -40,22 +40,22 @@ interface MasterAdminDashboardProps {
 export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
   const [error, setError] = useState<string>('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedScriptAdmin, setSelectedScriptAdmin] = useState<ScriptAdminProfile | null>(null);
+  const [selectedAdmin, setSelectedAdmin] = useState<AdminProfile | null>(null);
 
   const {
-    scriptAdmins,
+    admins,
     stats,
     isLoading,
     updateStatus,
-    deleteScriptAdmin,
+    deleteAdmin,
     refreshData,
   } = useMasterAdminApi();
 
-  const handleStatusUpdate = async (scriptAdmin: ScriptAdminProfile, isActive: boolean) => {
+  const handleStatusUpdate = async (admin: AdminProfile, isActive: boolean) => {
     try {
       setError('');
       await updateStatus.mutateAsync({
-        id: scriptAdmin.id,
+        id: admin.id,
         data: { isActive, isBanned: false },
       });
       onRefresh?.();
@@ -65,21 +65,21 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
   };
 
   const handleDelete = async () => {
-    if (!selectedScriptAdmin) return;
+    if (!selectedAdmin) return;
 
     try {
       setError('');
-      await deleteScriptAdmin.mutateAsync(selectedScriptAdmin.id);
+      await deleteAdmin.mutateAsync(selectedAdmin.id);
       setDeleteDialogOpen(false);
-      setSelectedScriptAdmin(null);
+      setSelectedAdmin(null);
       onRefresh?.();
     } catch (error: any) {
-      setError(error.response?.data?.message || 'Failed to delete script admin');
+      setError(error.response?.data?.message || 'Failed to delete admin');
     }
   };
 
-  const openDeleteDialog = (scriptAdmin: ScriptAdminProfile) => {
-    setSelectedScriptAdmin(scriptAdmin);
+  const openDeleteDialog = (admin: AdminProfile) => {
+    setSelectedAdmin(admin);
     setDeleteDialogOpen(true);
   };
 
@@ -88,7 +88,7 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
       <div className="space-y-6">
         <Card>
           <CardContent className="p-6">
-            <div className="text-center">Loading script admins...</div>
+            <div className="text-center">Loading admins...</div>
           </CardContent>
         </Card>
       </div>
@@ -107,7 +107,7 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Script Admins</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Admins</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.total || 0}</div>
@@ -142,12 +142,12 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
         </Card>
       </div>
 
-      {/* Script Admins Table */}
+      {/* Admins Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Script Admin Management</CardTitle>
+          <CardTitle>Admin Management</CardTitle>
           <CardDescription>
-            Manage all script admin accounts and their status
+            Manage all admin accounts and their status
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -163,7 +163,7 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {scriptAdmins?.map((admin) => (
+              {admins?.map((admin: any) => (
                 <TableRow key={admin.id}>
                   <TableCell className="font-medium">{admin.name}</TableCell>
                   <TableCell>{admin.email}</TableCell>
@@ -180,10 +180,10 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={admin.scriptAdminProfile?.isPaid ? "default" : "secondary"} className={
-                      admin.scriptAdminProfile?.isPaid ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+                    <Badge variant={admin.adminProfile?.isPaid ? "default" : "secondary"} className={
+                      admin.adminProfile?.isPaid ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
                     }>
-                      {admin.scriptAdminProfile?.isPaid ? 'Paid' : 'Unpaid'}
+                      {admin.adminProfile?.isPaid ? 'Paid' : 'Unpaid'}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -198,13 +198,13 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuItem
-                          onClick={() => handleStatusUpdate(admin, !admin.isActive)}
+                          onClick={() => handleStatusUpdate(admin as AdminProfile, !admin.isActive)}
                           disabled={updateStatus.isPending}
                         >
                           {admin.isActive ? 'Deactivate' : 'Activate'}
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => openDeleteDialog(admin as ScriptAdminProfile)}
+                          onClick={() => openDeleteDialog(admin as AdminProfile)}
                           className="text-red-600"
                         >
                           Delete
@@ -217,9 +217,9 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
             </TableBody>
           </Table>
 
-          {scriptAdmins?.length === 0 && (
+          {admins?.length === 0 && (
             <div className="text-center py-8 text-gray-500">
-              No script admins found
+              No admins found
             </div>
           )}
         </CardContent>
@@ -229,9 +229,9 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Script Admin</AlertDialogTitle>
+            <AlertDialogTitle>Delete Admin</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete {selectedScriptAdmin?.name}? This action cannot be undone.
+              Are you sure you want to delete {selectedAdmin?.name}? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -239,9 +239,9 @@ export function MasterAdminDashboard({ onRefresh }: MasterAdminDashboardProps) {
             <AlertDialogAction
               onClick={handleDelete}
               className="bg-red-600 hover:bg-red-700"
-              disabled={deleteScriptAdmin.isPending}
+              disabled={deleteAdmin.isPending}
             >
-              {deleteScriptAdmin.isPending ? 'Deleting...' : 'Delete'}
+              {deleteAdmin.isPending ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -12,8 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Alert, AlertDescription } from '../ui/alert';
 import { Badge } from '../ui/badge';
 import { Separator } from '../ui/separator';
-import { useScriptAdminProfile, useUpdateScriptAdminCustomization, useCheckSubdomain } from '../../hooks/use-script-admin';
-import { ScriptAdminCustomization as CustomizationData, FONT_OPTIONS, THEME_PRESETS } from '../../types/script-admin';
+import { useAdminProfile, useUpdateAdminCustomization, useCheckSubdomain } from '../../hooks/use-admin';
+import { AdminCustomization as CustomizationData, FONT_OPTIONS, THEME_PRESETS } from '../../types/admin';
 
 const customizationSchema = z.object({
   logo: z.string().url().optional().or(z.literal('')),
@@ -27,21 +27,21 @@ const customizationSchema = z.object({
   customDomain: z.string().optional().or(z.literal('')),
 });
 
-interface ScriptAdminCustomizationProps {
+interface AdminCustomizationProps {
   onSuccess?: () => void;
 }
 
-export function ScriptAdminCustomization({ onSuccess }: ScriptAdminCustomizationProps) {
+export function AdminCustomization({ onSuccess }: AdminCustomizationProps) {
   const [error, setError] = useState<string>('');
   const [subdomainAvailable, setSubdomainAvailable] = useState<boolean | null>(null);
   const [selectedTheme, setSelectedTheme] = useState<string>('');
 
-  const { data: profileResponse } = useScriptAdminProfile();
-  const updateCustomizationMutation = useUpdateScriptAdminCustomization();
+  const { data: profileResponse } = useAdminProfile();
+  const updateCustomizationMutation = useUpdateAdminCustomization();
   const checkSubdomainMutation = useCheckSubdomain();
 
   const profile = profileResponse?.data;
-  const currentCustomization = profile?.scriptAdminProfile;
+  const currentCustomization = profile?.adminProfile;
 
   const {
     register,
@@ -162,7 +162,7 @@ export function ScriptAdminCustomization({ onSuccess }: ScriptAdminCustomization
       <CardHeader>
         <CardTitle>Panel Customization</CardTitle>
         <CardDescription>
-          Customize the appearance of your script admin panel
+          Customize the appearance of your admin panel
         </CardDescription>
       </CardHeader>
       <CardContent>

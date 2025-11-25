@@ -1,12 +1,12 @@
-// Script Admin Types
-export interface ScriptAdminProfile {
+// Admin Types
+export interface AdminProfile {
   id: string;
   name: string;
   email: string;
-  role: 'script_admin';
+  role: 'admin';
   isActive: boolean;
   isBanned: boolean;
-  scriptAdminProfile?: {
+  adminProfile?: {
     logo?: string;
     themeColors?: {
       primary: string;
@@ -30,7 +30,7 @@ export interface ThemeColors {
   accent: string;
 }
 
-export interface ScriptAdminCustomization {
+export interface AdminCustomization {
   logo?: string;
   themeColors?: ThemeColors;
   font?: string;
@@ -60,7 +60,7 @@ export interface PaymentData {
 }
 
 // Master Admin Types
-export interface ScriptAdminStats {
+export interface AdminStats {
   total: number;
   active: number;
   inactive: number;
@@ -69,7 +69,7 @@ export interface ScriptAdminStats {
   unpaid: number;
 }
 
-export interface UpdateScriptAdminStatus {
+export interface UpdateAdminStatus {
   isActive: boolean;
   isBanned?: boolean;
 }
@@ -94,14 +94,14 @@ export interface PaginatedResponse<T> {
 }
 
 // Form Types
-export interface ScriptAdminRegistrationForm {
+export interface AdminRegistrationForm {
   name: string;
   email: string;
   password: string;
   confirmPassword: string;
 }
 
-export interface ScriptAdminLoginForm {
+export interface AdminLoginForm {
   email: string;
   password: string;
 }

@@ -7,18 +7,18 @@ import { Badge } from '../ui/badge';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Separator } from '../ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { useScriptAdminAuth, useScriptAdminPanelUrl } from '../../hooks/use-script-admin';
-import { ScriptAdminCustomization } from './ScriptAdminCustomization';
-import { ScriptAdminPayment } from './ScriptAdminPayment';
+import { useAdminAuth, useAdminPanelUrl } from '../../hooks/use-admin';
+import { AdminCustomization } from './admin-customization';
+import { AdminPayment } from './admin-payment';
 
-interface ScriptAdminDashboardProps {
+interface AdminDashboardProps {
   onLogout?: () => void;
 }
 
-export function ScriptAdminDashboard({ onLogout }: ScriptAdminDashboardProps) {
+export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState('overview');
-  const { profile, isAuthenticated, isActive, isPaid } = useScriptAdminAuth();
-  const { data: panelUrlResponse } = useScriptAdminPanelUrl();
+  const { profile, isAuthenticated, isActive, isPaid } = useAdminAuth();
+  const { data: panelUrlResponse } = useAdminPanelUrl();
 
   if (!isAuthenticated || !profile) {
     return (
@@ -111,27 +111,27 @@ export function ScriptAdminDashboard({ onLogout }: ScriptAdminDashboardProps) {
                 <CardTitle>Panel Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {profile.scriptAdminProfile?.subdomain && (
+                {profile.adminProfile?.subdomain && (
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Subdomain:</span>
                     <Badge variant="outline">
-                      {profile.scriptAdminProfile.subdomain}.yoursaasdomain.com
+                      {profile.adminProfile.subdomain}.yoursaasdomain.com
                     </Badge>
                   </div>
                 )}
 
-                {profile.scriptAdminProfile?.customDomain && (
+                {profile.adminProfile?.customDomain && (
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Custom Domain:</span>
-                    <Badge variant="outline">{profile.scriptAdminProfile.customDomain}</Badge>
+                    <Badge variant="outline">{profile.adminProfile.customDomain}</Badge>
                   </div>
                 )}
 
-                {profile.scriptAdminProfile?.font && (
+                {profile.adminProfile?.font && (
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Font:</span>
-                    <Badge variant="outline" style={{ fontFamily: profile.scriptAdminProfile.font }}>
-                      {profile.scriptAdminProfile.font}
+                    <Badge variant="outline" style={{ fontFamily: profile.adminProfile.font }}>
+                      {profile.adminProfile.font}
                     </Badge>
                   </div>
                 )}
@@ -151,7 +151,7 @@ export function ScriptAdminDashboard({ onLogout }: ScriptAdminDashboardProps) {
           </div>
 
           {/* Current Customization Preview */}
-          {profile.scriptAdminProfile && (
+          {profile.adminProfile && (
             <Card>
               <CardHeader>
                 <CardTitle>Current Customization</CardTitle>
@@ -159,34 +159,34 @@ export function ScriptAdminDashboard({ onLogout }: ScriptAdminDashboardProps) {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {profile.scriptAdminProfile.logo && (
+                  {profile.adminProfile.logo && (
                     <div>
                       <h4 className="text-sm font-medium mb-2">Logo</h4>
                       <img
-                        src={profile.scriptAdminProfile.logo}
+                        src={profile.adminProfile.logo}
                         alt="Logo"
                         className="h-12 w-auto object-contain"
                       />
                     </div>
                   )}
 
-                  {profile.scriptAdminProfile.themeColors && (
+                  {profile.adminProfile.themeColors && (
                     <div>
                       <h4 className="text-sm font-medium mb-2">Theme Colors</h4>
                       <div className="flex gap-2">
                         <div
                           className="w-8 h-8 rounded-full border"
-                          style={{ backgroundColor: profile.scriptAdminProfile.themeColors.primary }}
+                          style={{ backgroundColor: profile.adminProfile.themeColors.primary }}
                           title="Primary"
                         />
                         <div
                           className="w-8 h-8 rounded-full border"
-                          style={{ backgroundColor: profile.scriptAdminProfile.themeColors.secondary }}
+                          style={{ backgroundColor: profile.adminProfile.themeColors.secondary }}
                           title="Secondary"
                         />
                         <div
                           className="w-8 h-8 rounded-full border"
-                          style={{ backgroundColor: profile.scriptAdminProfile.themeColors.accent }}
+                          style={{ backgroundColor: profile.adminProfile.themeColors.accent }}
                           title="Accent"
                         />
                       </div>
@@ -200,14 +200,14 @@ export function ScriptAdminDashboard({ onLogout }: ScriptAdminDashboardProps) {
 
         {/* Customization Tab */}
         <TabsContent value="customization">
-          <ScriptAdminCustomization
+          <AdminCustomization
             onSuccess={() => setActiveTab('overview')}
           />
         </TabsContent>
 
         {/* Payment Tab */}
         <TabsContent value="payment">
-          <ScriptAdminPayment
+          <AdminPayment
             onSuccess={() => setActiveTab('overview')}
             onCancel={() => setActiveTab('overview')}
           />

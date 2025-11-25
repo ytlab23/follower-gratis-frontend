@@ -1,105 +1,105 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { masterAdminApi } from '../lib/api/script-admin';
+import { masterAdminApi } from '../lib/api/admin';
 import {
-  ScriptAdminProfile,
-  ScriptAdminStats,
-  UpdateScriptAdminStatus,
+  AdminProfile,
+  AdminStats,
+  UpdateAdminStatus,
   ApiResponse,
-} from '../types/script-admin';
+} from '../types/admin';
 
 // Query keys
 export const masterAdminKeys = {
   all: ['master-admin'] as const,
-  scriptAdmins: () => [...masterAdminKeys.all, 'script-admins'] as const,
-  scriptAdminStats: () => [...masterAdminKeys.all, 'stats'] as const,
-  scriptAdmin: (id: string) => [...masterAdminKeys.all, 'script-admin', id] as const,
+  admins: () => [...masterAdminKeys.all, 'admins'] as const,
+  adminStats: () => [...masterAdminKeys.all, 'stats'] as const,
+  admin: (id: string) => [...masterAdminKeys.all, 'admin', id] as const,
 };
 
-// Custom hook for all script admins
-export function useAllScriptAdmins() {
+// Custom hook for all admins
+export function useAllAdmins() {
   return useQuery({
-    queryKey: masterAdminKeys.scriptAdmins(),
-    queryFn: () => masterAdminApi.getAllScriptAdmins(),
+    queryKey: masterAdminKeys.admins(),
+    queryFn: () => masterAdminApi.getAllAdmins(),
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
-// Custom hook for script admin statistics
-export function useScriptAdminStats() {
+// Custom hook for admin statistics
+export function useAdminStats() {
   return useQuery({
-    queryKey: masterAdminKeys.scriptAdminStats(),
-    queryFn: () => masterAdminApi.getScriptAdminStats(),
+    queryKey: masterAdminKeys.adminStats(),
+    queryFn: () => masterAdminApi.getAdminStats(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
-// Custom hook for single script admin
-export function useScriptAdmin(id: string) {
+// Custom hook for single admin
+export function useAdmin(id: string) {
   return useQuery({
-    queryKey: masterAdminKeys.scriptAdmin(id),
-    queryFn: () => masterAdminApi.getScriptAdminById(id),
+    queryKey: masterAdminKeys.admin(id),
+    queryFn: () => masterAdminApi.getAdminById(id),
     enabled: !!id,
     staleTime: 2 * 60 * 1000, // 2 minutes
   });
 }
 
 // Mutation hooks
-export function useUpdateScriptAdminStatus() {
+export function useUpdateAdminStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateScriptAdminStatus }) =>
-      masterAdminApi.updateScriptAdminStatus(id, data),
+    mutationFn: ({ id, data }: { id: string; data: UpdateAdminStatus }) =>
+      masterAdminApi.updateAdminStatus(id, data),
     onSuccess: () => {
-      // Invalidate and refetch script admins and stats
-      queryClient.invalidateQueries({ queryKey: masterAdminKeys.scriptAdmins() });
-      queryClient.invalidateQueries({ queryKey: masterAdminKeys.scriptAdminStats() });
+      // Invalidate and refetch admins and stats
+      queryClient.invalidateQueries({ queryKey: masterAdminKeys.admins() });
+      queryClient.invalidateQueries({ queryKey: masterAdminKeys.adminStats() });
     },
   });
 }
 
-export function useUpdateScriptAdminProfile() {
+export function useUpdateAdminProfile() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: { name?: string; email?: string } }) =>
-      masterAdminApi.updateScriptAdminProfile(id, data),
+      masterAdminApi.updateAdminProfile(id, data),
     onSuccess: () => {
-      // Invalidate and refetch script admins
-      queryClient.invalidateQueries({ queryKey: masterAdminKeys.scriptAdmins() });
+      // Invalidate and refetch admins
+      queryClient.invalidateQueries({ queryKey: masterAdminKeys.admins() });
     },
   });
 }
 
-export function useDeleteScriptAdmin() {
+export function useDeleteAdmin() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => masterAdminApi.deleteScriptAdmin(id),
+    mutationFn: (id: string) => masterAdminApi.deleteAdmin(id),
     onSuccess: () => {
-      // Invalidate and refetch script admins and stats
-      queryClient.invalidateQueries({ queryKey: masterAdminKeys.scriptAdmins() });
-      queryClient.invalidateQueries({ queryKey: masterAdminKeys.scriptAdminStats() });
+      // Invalidate and refetch admins and stats
+      queryClient.invalidateQueries({ queryKey: masterAdminKeys.admins() });
+      queryClient.invalidateQueries({ queryKey: masterAdminKeys.adminStats() });
     },
   });
 }
 
 // Combined hook for master admin dashboard
 export function useMasterAdminApi() {
-  const scriptAdminsQuery = useAllScriptAdmins();
-  const statsQuery = useScriptAdminStats();
-  const updateStatus = useUpdateScriptAdminStatus();
-  const deleteScriptAdmin = useDeleteScriptAdmin();
+  const adminsQuery = useAllAdmins();
+  const statsQuery = useAdminStats();
+  const updateStatus = useUpdateAdminStatus();
+  const deleteAdmin = useDeleteAdmin();
 
   return {
-    scriptAdmins: scriptAdminsQuery.data?.data,
+    admins: adminsQuery.data?.data,
     stats: statsQuery.data?.data,
-    isLoading: scriptAdminsQuery.isLoading || statsQuery.isLoading,
-    error: scriptAdminsQuery.error || statsQuery.error,
+    isLoading: adminsQuery.isLoading || statsQuery.isLoading,
+    error: adminsQuery.error || statsQuery.error,
     updateStatus,
-    deleteScriptAdmin,
+    deleteAdmin,
     refreshData: () => {
-      scriptAdminsQuery.refetch();
+      adminsQuery.refetch();
       statsQuery.refetch();
     },
   };
