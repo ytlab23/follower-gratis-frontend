@@ -6,7 +6,7 @@ export const loginSchema = z.object({
     .string()
     .min(8, "La password deve contenere almeno 8 caratteri")
     .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
       "La password deve contenere almeno una lettera maiuscola, una lettera minuscola, un numero e un carattere speciale @$!%*?&"
     ),
 });
@@ -18,7 +18,7 @@ export const registerSchema = z.object({
     .string()
     .min(8, "La password deve contenere almeno 8 caratteri")
     .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
       "La password deve contenere almeno una lettera maiuscola, una lettera minuscola, un numero e un carattere speciale @$!%*?&"
     ),
 });
@@ -31,7 +31,7 @@ const createUserSchema = z.object({
     .string()
     .min(8, "La password deve contenere almeno 8 caratteri")
     .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
       "La password deve contenere almeno una lettera maiuscola, una lettera minuscola, un numero e un carattere speciale @$!%*?&"
     ),
   role: z.enum(["user", "admin"]),
@@ -47,7 +47,7 @@ const updateUserSchema = z.object({
     .string()
     .min(8, "La password deve contenere almeno 8 caratteri")
     .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
       "La password deve contenere almeno una lettera maiuscola, una lettera minuscola, un numero e un carattere speciale @$!%*?&"
     )
     .optional(),
@@ -62,7 +62,7 @@ export const resetPasswordSchema = z.object({
     .string()
     .min(8, "La password deve contenere almeno 8 caratteri")
     .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
       "La password deve contenere almeno una lettera maiuscola, una lettera minuscola, un numero e un carattere speciale @$!%*?&"
     ),
   confirmPassword: z.string().min(1, "Conferma password richiesta"),
