@@ -83,7 +83,7 @@ export default function UserLayout({
           </div>
 
           <div className="flex items-center gap-2">
-            {/* <LanguageToggle /> */}
+            <LanguageToggle />
             <ThemeToggle />
           </div>
         </header>

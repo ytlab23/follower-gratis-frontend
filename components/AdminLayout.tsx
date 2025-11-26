@@ -19,7 +19,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { ThemeToggle } from "@/components/ThemeToggle";
-// import { LanguageToggle } from "@/components/LanguageToggle";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { useEffect } from "react";
 
 export default function AdminLayout({
@@ -88,7 +88,7 @@ export default function AdminLayout({
             </Breadcrumb>
           </div>
           <div className="flex items-center gap-2">
-            {/* <LanguageToggle /> */}
+            <LanguageToggle />
             <ThemeToggle />
           </div>
         </header>

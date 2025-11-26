@@ -25,9 +25,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TranslationProvider>
+      <TranslationProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
             {children}
             <ToastContainer
               position="top-right"
@@ -41,9 +41,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
               pauseOnHover
               theme="light"
             />
-          </TranslationProvider>
-        </AuthProvider>
-      </QueryClientProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </TranslationProvider>
     </ThemeProvider>
   )
 }

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import api from "@/lib/axios";
 import type { User, ApiResponse, LoginResponse } from "@/types/api";
+import { useTranslationContext } from "@/lib/translations/context";
 
 // Update the AuthContextType interface to include register function
 export interface AuthContextType {
@@ -25,6 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const { t } = useTranslationContext('auth');
 
   useEffect(() => {
     const initializeAuth = () => {
@@ -69,7 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         setToken(accessToken);
         setUser(user);
-        toast.success("Accesso riuscito!");
+        toast.success(t('login.loginSuccess'));
 
         if (user?.role == "admin") {
           router.push("/admin");
@@ -93,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (response.data.status === "success") {
-        toast.success("Registrazione completata con successo! Effettua il login.");
+        toast.success(t('register.registerSuccess'));
         router.push("/login");
       }
     } catch (error) {
@@ -110,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     setUser(null);
     router.push("/login");
-    toast.success("Disconnessione avvenuta con successo!");
+    toast.success(t('login.loginSuccess').replace('signed in', 'logged out') || 'Logged out successfully');
   };
 
   return (

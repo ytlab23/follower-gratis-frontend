@@ -1,15 +1,18 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Registrati su FollowerGratis.it - Crea il tuo account gratis",
-  description:
-    "Apri subito un account gratuito su FollowerGratis.it e inizia a far crescere il tuo profilo con i nostri strumenti semplici e veloci.",
-};
+import { LanguageToggle } from "@/components/LanguageToggle";
 
 export default function RegisterLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  return (
+    <div className="relative">
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageToggle />
+      </div>
+      {children}
+    </div>
+  );
 }

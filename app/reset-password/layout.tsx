@@ -1,15 +1,18 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Reimposta la tua password - FollowerGratis.it",
-  description:
-    "Hai dimenticato la password? Reimposta facilmente l'accesso al tuo account FollowerGratis.it in pochi secondi.",
-};
+import { LanguageToggle } from "@/components/LanguageToggle";
 
 export default function ResetPasswordLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <div>{children}</div>;
+  return (
+    <div className="relative">
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageToggle />
+      </div>
+      {children}
+    </div>
+  );
 }
