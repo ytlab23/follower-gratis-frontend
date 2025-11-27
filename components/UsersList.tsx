@@ -14,7 +14,10 @@ import { EmptyState } from "./EmpityState";
 import { Users } from "lucide-react";
 import { format } from "@/lib/date-utils";
 
+import { useTranslation } from "@/lib/translations";
+
 const UsersList = () => {
+  const { t } = useTranslation('admin');
   const { users, isLoading } = useUsers();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -34,7 +37,7 @@ const UsersList = () => {
 
   return (
     <div className="p-4 rounded-lg border mb-10">
-      <h2 className="text-2xl font-bold mb-4">Elenco Utenti</h2>
+      <h2 className="text-2xl font-bold mb-4">{t('users.title')}</h2>
       {isLoading ? (
         <div className="space-y-2">
           {[...Array(5)].map((_, i) => (
@@ -44,29 +47,29 @@ const UsersList = () => {
       ) : paginatedUsers.length === 0 ? (
         <EmptyState
           icon={Users}
-          title="Nessun utente registrato"
-          description="Non ci sono utenti da mostrare al momento."
+          title={t('users.noUsers')}
+          description={t('users.noUsersDesc')}
         />
       ) : (
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Aggiornato il</TableHead>
-                <TableHead className="w-[100px]">Stato</TableHead>
+                <TableHead>{t('users.name')}</TableHead>
+                <TableHead>{t('users.email')}</TableHead>
+                <TableHead>{t('users.updatedAt')}</TableHead>
+                <TableHead className="w-[100px]">{t('users.status')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedUsers.map((user) => (
-                <TableRow key={user._id}>
+              {paginatedUsers.map((user, index) => (
+                <TableRow key={user._id || `user-${index}`}>
                   <TableCell className="font-medium">{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
                     {format(new Date(user.updatedAt), "dd MMM, yyyy")}
                   </TableCell>
-                  <TableCell>{user.isBanned ? "Bloccato" : "Attivo"}</TableCell>
+                  <TableCell>{user.isBanned ? t('users.banned') : t('users.active')}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -74,16 +77,16 @@ const UsersList = () => {
           <div className="flex justify-end mt-5">
             <div className="flex justify-between items-center gap-4 mt-4 ml-auto">
               <Button onClick={handlePreviousPage} disabled={currentPage === 1}>
-                Precedente
+                {t('users.previous')}
               </Button>
               <span>
-                Pagina {currentPage} di {totalPages}
+                {t('users.pageInfo', { current: currentPage.toString(), total: totalPages.toString() })}
               </span>
               <Button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
               >
-                Successiva
+                {t('users.next')}
               </Button>
             </div>
           </div>

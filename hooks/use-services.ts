@@ -74,5 +74,8 @@ export function useOriginalServices() {
       );
       return response.data.data || [];
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: 1,
+    refetchOnWindowFocus: false,
   });
 }

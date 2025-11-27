@@ -13,6 +13,8 @@ import {
 import { Category } from "@/types/api";
 import { EmptyState } from "../EmpityState";
 
+import { useTranslation } from "@/lib/translations";
+
 interface CategoriesTableProps {
   categories: Category[];
   onEdit: (category: Category) => void;
@@ -24,15 +26,17 @@ export function CategoriesTable({
   onEdit,
   onDelete,
 }: CategoriesTableProps) {
+  const { t } = useTranslation('admin');
+
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Nome</TableHead>
-            <TableHead>Creato il</TableHead>
-            <TableHead>Aggiornato il</TableHead>
-            <TableHead className="text-right max-w-10">Azioni</TableHead>
+            <TableHead>{t('categories.name')}</TableHead>
+            <TableHead>{t('common.createdAt', { defaultValue: 'Creato il' })}</TableHead>
+            <TableHead>{t('common.updatedAt', { defaultValue: 'Aggiornato il' })}</TableHead>
+            <TableHead className="text-right max-w-10">{t('categories.actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -44,8 +48,8 @@ export function CategoriesTable({
               >
                 <EmptyState
                   icon={Ungroup}
-                  title="Nessuna categoria creata"
-                  description="Al momento non ci sono categorie da visualizzare."
+                  title={t('categories.noCategories', { defaultValue: 'Nessuna categoria creata' })}
+                  description={t('categories.noCategoriesDesc', { defaultValue: 'Al momento non ci sono categorie da visualizzare.' })}
                 />
               </TableCell>
             </TableRow>

@@ -14,6 +14,8 @@ import enCommon from '../../public/locales/en/common.json'
 import itCommon from '../../public/locales/it/common.json'
 import enDashboard from '../../public/locales/en/dashboard.json'
 import itDashboard from '../../public/locales/it/dashboard.json'
+import enAdmin from '../../public/locales/en/admin.json'
+import itAdmin from '../../public/locales/it/admin.json'
 
 
 
@@ -27,6 +29,7 @@ export interface Translations {
   services: typeof enServices
   orders: typeof enOrders
   newOrder: typeof enNewOrder
+  admin: typeof enAdmin
 }
 
 // Combine translations
@@ -38,6 +41,7 @@ const translations: Record<Language, Translations> = {
     services: itServices,
     orders: itOrders,
     newOrder: itNewOrder,
+    admin: itAdmin,
   },
   en: {
     common: enCommon,
@@ -46,6 +50,7 @@ const translations: Record<Language, Translations> = {
     services: enServices,
     orders: enOrders,
     newOrder: enNewOrder,
+    admin: enAdmin,
   },
 }
 

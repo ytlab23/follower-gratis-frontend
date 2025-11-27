@@ -12,17 +12,21 @@ import { useServices } from "@/hooks/use-services";
 import { Package } from "lucide-react";
 import { Service } from "@/types/api";
 
+import { useTranslation } from "@/lib/translations";
+
 interface BestServicesProps {
   services: Service[];
 }
 
 function BestServicesList({ services }: BestServicesProps) {
+  const { t } = useTranslation('admin');
+
   if (!services.length) {
     return (
       <EmptyState
         icon={Package}
-        title="Nessun Servizio Disponibile"
-        description="Non ci sono servizi da mostrare al momento"
+        title={t('serviceCategories.noServices')}
+        description={t('serviceCategories.noServicesDesc')}
       />
     );
   }
@@ -44,7 +48,7 @@ function BestServicesList({ services }: BestServicesProps) {
         >
           <p className="text-sm font-medium">{category}</p>
           <Badge className="p-2 px-3 rounded-lg" variant="outline">
-            {count} servizi
+            {count} {t('serviceCategories.services')}
           </Badge>
         </div>
       ))}
@@ -53,15 +57,16 @@ function BestServicesList({ services }: BestServicesProps) {
 }
 
 export default function BestServicesCard() {
+  const { t } = useTranslation('admin');
   const { data: services = [], isLoading: isServiceLoading } = useServices();
   const bestServices = services.slice(0, 5);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Categorie di Servizi</CardTitle>
+        <CardTitle>{t('serviceCategories.title')}</CardTitle>
         <CardDescription>
-          Conteggio servizi in base alla categoria
+          {t('serviceCategories.subtitle')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -74,8 +79,8 @@ export default function BestServicesCard() {
         ) : services.length == 0 ? (
           <EmptyState
             icon={Package}
-            title="Servizi Disponibili"
-            description="Non ci sono servizi da mostrare al momento."
+            title={t('serviceCategories.noServices')}
+            description={t('serviceCategories.noServicesDesc')}
           />
         ) : (
           <BestServicesList services={bestServices} />

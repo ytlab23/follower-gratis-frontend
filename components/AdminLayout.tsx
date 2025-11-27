@@ -20,6 +20,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/providers/auth-provider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import AdminPaymentBanner from "@/components/AdminPaymentBanner";
 import { useEffect } from "react";
 
 export default function AdminLayout({
@@ -31,13 +32,17 @@ export default function AdminLayout({
   const router = useRouter();
   const { user, isLoading } = useAuth();
 
+  // Allow access to register and login pages without authentication
+  const isPublicAdminPage = pathname === '/admin/register' || pathname === '/admin/login';
+
   useEffect(() => {
-    if (!isLoading && user?.role !== "admin") {
+    if (!isLoading && !isPublicAdminPage && user?.role !== "admin") {
       router.push("/login");
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading, router, isPublicAdminPage]);
 
-  if (isLoading) {
+  // Show loading state
+  if (isLoading && !isPublicAdminPage) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -45,12 +50,18 @@ export default function AdminLayout({
     );
   }
 
-  if (user?.role !== "admin") {
+  // If not authenticated and not on public page, show loading while redirecting
+  if (user?.role !== "admin" && !isPublicAdminPage) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
+  }
+
+  // For public admin pages (register/login), render without sidebar
+  if (isPublicAdminPage) {
+    return <>{children}</>;
   }
 
   const pathSegments = pathname.split("/").filter(Boolean);
@@ -92,6 +103,7 @@ export default function AdminLayout({
             <ThemeToggle />
           </div>
         </header>
+        <AdminPaymentBanner />
         <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
       </SidebarInset>
     </SidebarProvider>

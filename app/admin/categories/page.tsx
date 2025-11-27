@@ -22,7 +22,10 @@ import {
 } from "@/hooks/use-categories";
 import { Category } from "@/types/api";
 
+import { useTranslation } from "@/lib/translations";
+
 export default function CategoriesPage() {
+  const { t } = useTranslation('admin');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<
@@ -88,9 +91,9 @@ export default function CategoriesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Categorie</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('categories.title')}</h1>
           <p className="text-muted-foreground">
-            Gestisci le categorie di servizi per il tuo pannello SMM
+            {t('categories.subtitle', { defaultValue: 'Gestisci le categorie di servizi per il tuo pannello SMM' })}
           </p>
         </div>
         <Button
@@ -98,20 +101,20 @@ export default function CategoriesPage() {
           className="bg-blue-600 hover:bg-blue-700"
         >
           <Plus className="mr-2 h-4 w-4" />
-          Aggiungi Categoria
+          {t('categories.add')}
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Tutte le Categorie</CardTitle>
+          <CardTitle>{t('categories.allCategories', { defaultValue: 'Tutte le Categorie' })}</CardTitle>
           <CardDescription>
-            Un elenco di tutte le categorie nel tuo sistema.
+            {t('categories.listDescription', { defaultValue: 'Un elenco di tutte le categorie nel tuo sistema.' })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-8">Caricamento categorie...</div>
+            <div className="text-center py-8">{t('common.loading', { defaultValue: 'Caricamento...' })}</div>
           ) : (
             <CategoriesTable
               categories={categories || []}

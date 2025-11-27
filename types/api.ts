@@ -6,6 +6,7 @@ export interface User {
   createdAt: string;
   updatedAt: string;
   isBanned: boolean;
+  hasPaid?: boolean;
 }
 export interface Category {
   _id: string;

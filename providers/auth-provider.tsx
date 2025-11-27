@@ -15,6 +15,7 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   isLoading: boolean;
 }
 
@@ -115,9 +116,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     toast.success(t('login.loginSuccess').replace('signed in', 'logged out') || 'Logged out successfully');
   };
 
+  const refreshUser = async () => {
+    try {
+      const storedToken = localStorage.getItem("token");
+      if (!storedToken) {
+        throw new Error("No token found");
+      }
+
+      // Fetch updated user data from the server
+      const response = await api.get<ApiResponse<User>>("/auth/me");
+
+      if (response.data.status === "success" && response.data.data) {
+        const updatedUser = response.data.data;
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        setUser(updatedUser);
+      }
+    } catch (error) {
+      console.error("Error refreshing user data:", error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, token, login, register, logout, isLoading }}
+      value={{ user, token, login, register, logout, refreshUser, isLoading }}
     >
       {children}
     </AuthContext.Provider>

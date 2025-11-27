@@ -11,7 +11,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useOrders } from "@/hooks/use-orders";
 import { Package } from "lucide-react";
 
+import { useTranslation } from "@/lib/translations";
+
 const RecentOrders = () => {
+  const { t } = useTranslation('admin');
   const { data: orders = [], isLoading: isOrderLoading } = useOrders();
 
   const recentOrders = orders.slice(0, 5);
@@ -19,8 +22,8 @@ const RecentOrders = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Ordini Recenti</CardTitle>
-        <CardDescription>Le tue ultime attività di ordine</CardDescription>
+        <CardTitle>{t('recentOrders.title')}</CardTitle>
+        <CardDescription>{t('recentOrders.subtitle')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -33,8 +36,8 @@ const RecentOrders = () => {
           ) : recentOrders.length == 0 ? (
             <EmptyState
               icon={Package}
-              title="Nessun Ordine Disponibile"
-              description="Non ci sono ordini da mostrare al momento."
+              title={t('recentOrders.noOrders')}
+              description={t('recentOrders.noOrdersDesc')}
             />
           ) : recentOrders.length > 0 ? (
             recentOrders.map((order, index) => (
@@ -44,10 +47,10 @@ const RecentOrders = () => {
               >
                 <div className="space-y-1">
                   <p className="text-sm font-medium">
-                    Ordine #{order.topsmmOrderId}
+                    {t('recentOrders.order')} #{order.topsmmOrderId}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {order.quantity} unità • ${order.price}
+                    {order.quantity} {t('recentOrders.units')} • ${order.price}
                   </p>
                 </div>
                 <Badge
@@ -56,10 +59,10 @@ const RecentOrders = () => {
                     order.status === "completed"
                       ? "default"
                       : order.status === "pending"
-                      ? "secondary"
-                      : order.status === "failed"
-                      ? "destructive"
-                      : "outline"
+                        ? "secondary"
+                        : order.status === "failed"
+                          ? "destructive"
+                          : "outline"
                   }
                 >
                   {order.status}
@@ -68,7 +71,7 @@ const RecentOrders = () => {
             ))
           ) : (
             <p className="text-sm text-muted-foreground">
-              Nessun ordine ancora
+              {t('recentOrders.noOrdersYet')}
             </p>
           )}
         </div>

@@ -11,8 +11,10 @@ import BestServicesCard from "../../components/ServicesCategory";
 import UsersList from "@/components/UsersList";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/translations";
 
 export default function DashboardPage() {
+  const { t } = useTranslation('admin');
   const { user, isLoading } = useAuth();
   const { data: services = [] } = useServices();
   const { data: orders = [], isLoading: isOrderLoading } = useOrders();
@@ -36,30 +38,30 @@ export default function DashboardPage() {
 
   const stats = [
     {
-      title: "Servizi Totali",
+      title: t('dashboard.totalServices'),
       value: services.length,
-      description: "Servizi disponibili",
+      description: t('dashboard.totalServicesDesc'),
       icon: Package,
       color: "text-blue-600",
     },
     {
-      title: "Ordini Totali",
+      title: t('dashboard.totalOrders'),
       value: orders.length,
-      description: "Tutti gli ordini effettuati",
+      description: t('dashboard.totalOrdersDesc'),
       icon: ShoppingCart,
       color: "text-green-600",
     },
     {
-      title: "Ordini Completati",
+      title: t('dashboard.completedOrders'),
       value: orders.filter((order) => order.status === "completed").length,
-      description: "Completati con successo",
+      description: t('dashboard.completedOrdersDesc'),
       icon: TrendingUp,
       color: "text-purple-600",
     },
     {
-      title: "Ordini in Attesa",
+      title: t('dashboard.pendingOrders'),
       value: orders.filter((order) => order.status === "pending").length,
-      description: "In attesa di elaborazione",
+      description: t('dashboard.pendingOrdersDesc'),
       icon: Users,
       color: "text-orange-600",
     },
@@ -70,14 +72,14 @@ export default function DashboardPage() {
       <section className="overflow-hidden rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 p-8 text-white">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="space-y-4">
-            <h2 className="text-3xl font-bold">Bentornato, {user?.name}!</h2>
+            <h2 className="text-3xl font-bold">{t('dashboard.welcome', { name: user?.name || '' })}</h2>
             <p className="max-w-[600px] text-white/80">
-              Ecco cosa sta succedendo oggi con il tuo pannello SMM.
+              {t('dashboard.subtitle')}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/admin/services">
                 <Button className="rounded-2xl bg-white text-indigo-700 hover:bg-white/90">
-                  Gestisci Servizi
+                  {t('dashboard.manageServices')}
                 </Button>
               </Link>
               <Link href="/admin/orders">
@@ -85,7 +87,7 @@ export default function DashboardPage() {
                   variant="outline"
                   className="rounded-2xl bg-transparent border-white text-white hover:bg-white/10"
                 >
-                  Ordini
+                  {t('dashboard.orders')}
                 </Button>
               </Link>
             </div>
