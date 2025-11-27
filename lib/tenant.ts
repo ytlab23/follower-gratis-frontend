@@ -24,10 +24,12 @@ export async function getTenantConfig(
     isCustomDomain: boolean = false
 ): Promise<TenantConfig | null> {
     try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
         const endpoint = isCustomDomain
             ? `${apiUrl}/api/tenant/config/domain/${identifier}`
             : `${apiUrl}/api/tenant/config/${identifier}`;
+
+        console.log(`Fetching tenant config from: ${endpoint}`);
 
         const response = await fetch(endpoint, {
             cache: 'no-store', // Always fetch fresh data
