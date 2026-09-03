@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "follower-gratis-frontend",
+  "compatibility_date": "2026-08-31",
+  // The site is a fully static Next.js export (output: 'export' in
+  // next.config.mjs), so it is served as Workers Static Assets from the
+  // `out/` directory produced by `next build`. No server-side worker or
+  // OpenNext adapter is needed.
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page"
+  }
+}
